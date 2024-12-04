@@ -1,0 +1,41 @@
+# Line breaking and template formatting
+AlwaysBreakTemplateDeclarations: Yes
+AllowShortFunctionsOnASingleLine: Empty
+BinPackParameters: true
+BinPackArguments: true
+ColumnLimit: 120
+
+# Spacing for operators and literals
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: false
+SpacesInAngles: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceAfterLogicalNot: false
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyParentheses: false
+SpacesInContainerLiterals: false
+
+# Special handling for floating point literals
+BitFieldColonSpacing: Both
+SpaceAroundPointerQualifiers: Default
+SpacesInConditionalStatement: false
+
+# Indentation
+IndentWidth: 4
+AccessModifierOffset: -4
+ContinuationIndentWidth: 4
+
+# Template specific
+SpaceAfterTemplateKeyword: true
+
+# Control statement formatting
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortBlocksOnASingleLine: Empty
+BreakBeforeBraces: Attach
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Always
+AllowShortCaseLabelsOnASingleLine: false  # Changed to false
+IndentCaseLabels: true  # Added to indent case labels
+# AllowShortCaseLabelsOnASingleLine: false  # Added to prevent case labels on single line

@@ -1,0 +1,27 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/graph",
+                "${workspaceFolder}/include/ann",
+                "${workspaceFolder}/include/tensor",
+                "C:/Program Files/BachKhoa/Nam2/DSA/BTL/Assignment3/include",
+                "C:/Program Files/BachKhoa/Nam2/DSA/BTL/Assignment3/include/graph"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.22621.0",
+            "compilerPath": "C:/mingw64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
