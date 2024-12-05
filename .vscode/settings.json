@@ -80,6 +80,12 @@
         "unordered_map": "cpp",
         "xlocmes": "cpp",
         "xtr1common": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "string_view": "cpp",
+        "codecvt": "cpp",
+        "cstdarg": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "memory_resource": "cpp"
     }
 }

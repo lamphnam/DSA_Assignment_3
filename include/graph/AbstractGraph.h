@@ -104,14 +104,13 @@ public:
         VertexNode *fromNode = getVertexNode(from);
         VertexNode *toNode = getVertexNode(to);
         if(fromNode == nullptr) {
-            throw VertexNotFoundException(fromNode->toString());
+            throw VertexNotFoundException(this->getVertex2Str()(from));
         }
         if(toNode == nullptr) {
-            throw VertexNotFoundException(toNode->toString());
+            throw VertexNotFoundException(this->getVertex2Str()(to));
         }
-
         Edge *edge = fromNode->getEdge(toNode);
-        if(!edge) throw EdgeNotFoundException(edge->toString());
+        if(!edge) throw EdgeNotFoundException(this->edge2Str(*edge));
         return edge->weight;
     }
 
@@ -119,7 +118,7 @@ public:
         // TODO
         VertexNode *fromNode = getVertexNode(from);
         if(fromNode == nullptr) {
-            throw VertexNotFoundException(fromNode->toString());
+            throw VertexNotFoundException(this->getVertex2Str()(from));
         }
         return fromNode->getOutwardEdges();
     }
@@ -127,7 +126,7 @@ public:
     virtual DLinkedList<T> getInwardEdges(T to) {
         // TODO
         VertexNode *toNode = getVertexNode(to);
-        if(toNode == nullptr) throw VertexNotFoundException(toNode->toString());
+        if(toNode == nullptr) throw VertexNotFoundException(this->getVertex2Str()(to));
 
         DLinkedList<T> inwardVertices;
 
@@ -156,7 +155,7 @@ public:
 
     virtual void clear() {
         // TODO
-        for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); nodeIt++) {
+        for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); ++nodeIt) {
             VertexNode *vertexNode = *nodeIt;
 
             vertexNode->adList.clear();
@@ -170,9 +169,9 @@ public:
     virtual int inDegree(T vertex) {
         // TODO
         VertexNode *vertexNode = getVertexNode(vertex);
-        if(vertexNode == nullptr) throw VertexNotFoundException(vertexNode->toString());
+        if(vertexNode == nullptr) throw VertexNotFoundException(this->getVertex2Str()(vertex));
         int degree = 0;
-        for(auto nodeIt = nodeList.begin(), nodeIt != nodeList.end(); nodeIt++) {
+        for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); ++nodeIt) {
             VertexNode *node = *nodeIt;
             for(auto edgeIt = node->adList.begin(); edgeIt != node->adList.end(); edgeIt++) {
                 Edge *edge = *edgeIt;
@@ -198,7 +197,7 @@ public:
     virtual DLinkedList<T> vertices() {
         // TODO
         DLinkedList<T> vertexList;
-        for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); nodeIt++) {
+        for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); ++nodeIt) {
             VertexNode *node = *nodeIt;
             vertexList.add(node->vertex);
         }
@@ -209,11 +208,11 @@ public:
         // TODO
         VertexNode *fromNode = getVertexNode(from);
         if(fromNode == nullptr) {
-            throw VertexNotFoundException(fromNode->toString());
+            throw VertexNotFoundException(this->getVertex2Str()(from));
         }
         VertexNode *toNode = getVertexNode(to);
         if(toNode == nullptr) {
-            throw VertexNotFoundException(toNode->toString());
+            throw VertexNotFoundException(this->getVertex2Str()(to));
         }
         for(auto it = fromNode->adList.begin(); it != fromNode->adList.end(); it++) {
             Edge *edge = *it;
@@ -288,7 +287,6 @@ public:
     private:
         template <class U>
         friend class UGraphModel; // UPDATED: added
-        friend class DGraphModel;
         T vertex;
         int inDegree_, outDegree_;
         DLinkedList<Edge *> adList;
@@ -316,7 +314,6 @@ public:
         void connect(VertexNode *to, float weight = 0) {
             // TODO
             Edge *existingEdge = getEdge(to);
-
             if(existingEdge != nullptr) {
                 existingEdge->weight = weight;
             } else {
@@ -363,6 +360,7 @@ public:
                 if(edge->to == to) {
                     adList.removeAt(count);
                     this->outDegree_--;
+                    this->inDegree_--;
                     break;
                 }
                 count++;
