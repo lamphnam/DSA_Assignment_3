@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   Queue.h
  * Author: LTSACH
  *
@@ -17,130 +17,160 @@
 #include "list/DLinkedList.h"
 #include "stacknqueue/IDeck.h"
 
-template<class T>
-class Queue: public IDeck<T>{
+template <class T>
+class Queue : public IDeck<T> {
 public:
-    class Iterator; //forward declaration
-    
+    class Iterator; // forward declaration
+
 protected:
     DLinkedList<T> list;
-    void (*deleteUserData)(DLinkedList<T>*);
-    bool (*itemEqual)(T& lhs, T& rhs);
-    
+    void (*deleteUserData)(DLinkedList<T> *);
+    bool (*itemEqual)(T &lhs, T &rhs);
+
 public:
-    Queue(
-            void (*deleteUserData)(DLinkedList<T>*)=0, 
-            bool (*itemEqual)(T&, T&)=0){
+    Queue(void (*deleteUserData)(DLinkedList<T> *) = 0, bool (*itemEqual)(T &, T &) = 0) {
         this->itemEqual = itemEqual;
         this->deleteUserData = deleteUserData;
     }
-    void push(T item){
-        //TODO: add item to the rear
+
+    void push(T item) {
+        // TODO: add item to the rear
+        this->list.add(0, item);
     }
-    T pop(){
-        //TODO: remove and return the front item
-        return T{}; //Placeholder
+
+    T pop() {
+        // TODO: remove and return the front item
+        if(this->list.empty()) throw std::out_of_range("Stack Underflow");
+        return this->list.removeAt(0); // Placeholder
     }
-    T& peek(){
-        //TODO: return the front item
-        return T{}; //Placeholder
+
+    T &peek() {
+        // TODO: return the front item
+        if(this->list.empty()) throw std::out_of_range("Stack Underflow");
+        return this->list.get(0); // Placeholder
     }
-    bool empty(){
-        //TODO: check if the queue is empty
+
+    bool empty() {
+        // TODO: check if the queue is empty
+        return this->list.empty();
+    }
+
+    int size() {
+        // TODO: return the number of items in the queue
+        return this->list.size();
+    }
+
+    void clear() {
+        // TODO: remove all items in the queue
+        return this->list.clear();
+    }
+
+    bool remove(T item) {
+        // TODO: remove the item from the queue
+        // return true if the item is removed successfully
+        for(int i = 0; i < list.size(); i++) {
+            T &current = list.get(i);
+            if(equals(current, item,itemEqual)) {
+                list.removeAt(i);
+                return true;
+            }
+        }
         return false;
     }
-    int size(){
-        //TODO: return the number of items in the queue
-        return 0;       
-    }
-    void clear(){
-        //TODO: remove all items in the queue
-    }
-    bool remove(T item){
-        //TODO: remove the item from the queue
-        //     return true if the item is removed successfully
+
+    bool contains(T item) {
+        // TODO: check if the item is in the queue
+        for(int i = 0; i < list.size(); i++) {
+            T &current = list.get(i);
+            if(equals(current, item, itemEqual)) {
+                return true;
+            }
+        }
         return false;
     }
-    bool contains(T item){
-        //TODO: check if the item is in the queue
-        return false;
-    }
-    string  toString(string (*item2str)(T&)=0 ){
+
+    string toString(string (*item2str)(T &) = 0) {
         stringstream os;
         os << "FRONT-TO-REAR: " << list.toString(item2str);
         return os.str();
     }
-    void println(string (*item2str)(T&)=0 ){
+
+    void println(string (*item2str)(T &) = 0) {
         cout << toString(item2str) << endl;
     }
-    
+
     ///
-    
-    Iterator front(){
+
+    Iterator front() {
         return Iterator(this, true);
     }
-    Iterator rear(){
+
+    Iterator rear() {
         return Iterator(this, false);
     }
-    
+
 private:
-    static bool equals(T& lhs, T& rhs, bool (*itemEqual)(T&, T& )){
+    static bool equals(T &lhs, T &rhs, bool (*itemEqual)(T &, T &)) {
         if(itemEqual == 0) return lhs == rhs;
         else return itemEqual(lhs, rhs);
     }
-    
-//////////////////////////////////////////////////////////////////////
-////////////////////////  INNER CLASSES DEFNITION ////////////////////
-//////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////
+    ////////////////////////  INNER CLASSES DEFNITION ////////////////////
+    //////////////////////////////////////////////////////////////////////
 
 public:
-//Iterator: BEGIN
-    class Iterator{
+    // Iterator: BEGIN
+    class Iterator {
     private:
-        Queue<T>* queue;
+        Queue<T> *queue;
         typename DLinkedList<T>::Iterator listIt;
+
     public:
-        Iterator(Queue<T>* queue=0, bool begin=true){
+        Iterator(Queue<T> *queue = 0, bool begin = true) {
             this->queue = queue;
-            if(begin){
+            if(begin) {
                 if(queue != 0) this->listIt = queue->list.begin();
                 else this->listIt = 0;
-            }
-            else{
+            } else {
                 if(queue != 0) this->listIt = queue->list.end();
                 else this->listIt = 0;
             }
         }
-        Iterator& operator=(const Iterator& iterator ){
+
+        Iterator &operator=(const Iterator &iterator) {
             this->queue = iterator.queue;
             this->listIt = iterator.listIt;
             return *this;
         }
-        
-        T& operator*(){
+
+        T &operator*() {
             return *(this->listIt);
         }
-        bool operator!=(const Iterator& iterator){
+
+        bool operator!=(const Iterator &iterator) {
             return this->listIt != iterator.listIt;
         }
-        // Prefix ++ overload 
-        Iterator& operator++(){
+
+        // Prefix ++ overload
+        Iterator &operator++() {
             listIt++;
-            return *this; 
+            return *this;
         }
-        // Postfix ++ overload 
-        Iterator operator++(int){
-            Iterator iterator = *this; 
-            ++*this; 
-            return iterator; 
+
+        // Postfix ++ overload
+        Iterator operator++(int) {
+            Iterator iterator = *this;
+            ++*this;
+            return iterator;
         }
-        void remove(void (*removeItem)(T)=0){
+
+        void remove(void (*removeItem)(T) = 0) {
             listIt.remove(removeItem);
         }
     };
-    //Iterator: END
+
+    // Iterator: END
 };
 
-
 #endif /* QUEUE_H */
-
