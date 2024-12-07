@@ -83,8 +83,8 @@ void DGraphDemo3(){
     DLinkedList<char> bfs = sorter.sort(TopoSorter<char>::BFS);
     cout << left << setw(15) << "Topo-order (BFS): " << bfs.toString() << endl;
     
-    // DLinkedList<char> dfs = sorter.sort(TopoSorter<char>::DFS);
-    // cout << left << setw(15) << "Topo-order (DFS): " << dfs.toString() << endl;
+    DLinkedList<char> dfs = sorter.sort(TopoSorter<char>::DFS);
+    cout << left << setw(15) << "Topo-order (DFS): " << dfs.toString() << endl;
 }
 
 // void dijkstraDemo(){

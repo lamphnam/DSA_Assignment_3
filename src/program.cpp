@@ -35,6 +35,7 @@ int main(int argc, char **argv) {
     // threeclasses_classification();
     //  ugraphDemo1();
     //  ugraphDemo2();
+    DGraphDemo2();
     DGraphDemo3();
     return 0;
 }

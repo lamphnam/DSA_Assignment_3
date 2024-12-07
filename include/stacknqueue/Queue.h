@@ -35,7 +35,7 @@ public:
 
     void push(T item) {
         // TODO: add item to the rear
-        this->list.add(0, item);
+        this->list.add(item);
     }
 
     T pop() {
@@ -70,7 +70,7 @@ public:
         // return true if the item is removed successfully
         for(int i = 0; i < list.size(); i++) {
             T &current = list.get(i);
-            if(equals(current, item,itemEqual)) {
+            if(equals(current, item, itemEqual)) {
                 list.removeAt(i);
                 return true;
             }

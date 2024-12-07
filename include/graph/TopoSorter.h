@@ -28,7 +28,7 @@ protected:
     int (*hash_code)(T &, int);
 
 public:
-    static int hashFunction(char &key, int size) {
+    static int hashFunc(T &key, int size = 100) {
         return key % size;
     }
 
@@ -44,10 +44,7 @@ public:
     }
 
     DLinkedList<T> bfsSort(bool sorted = true) {
-        // Calculate in-degree for each vertex
-        xMap<T, int> inDegreeMap = vertex2inDegree(hashFunction);
-
-        // Get list of vertices with zero in-degree
+        xMap<T, int> inDegreeMap = vertex2inDegree(hashFunc);
         DLinkedListSE<T> zeroInDegreeList;
         for(auto vertexIt = graph->begin(); vertexIt != graph->end(); ++vertexIt) {
             T vertex = *vertexIt;
@@ -61,37 +58,42 @@ public:
         }
         DLinkedList<T> topoSortedList;
         Queue<T> queue;
-
         for(auto it = zeroInDegreeList.begin(); it != zeroInDegreeList.end(); ++it) {
-            T vertex = *it;
-            queue.push(vertex);
+            queue.push(*it);
         }
-
         while(!queue.empty()) {
             T currentVertex = queue.pop();
-
             topoSortedList.add(currentVertex);
-
             auto neighbors = graph->getOutwardEdges(currentVertex);
-
             for(auto it = neighbors.begin(); it != neighbors.end(); ++it) {
                 T &neighbor = *it;
-
                 int &inDegreeRef = inDegreeMap.get(neighbor);
                 inDegreeRef--;
-
                 if(inDegreeRef == 0) {
                     queue.push(neighbor);
                 }
             }
         }
-
         return topoSortedList;
     }
 
     DLinkedList<T> dfsSort(bool sorted = true) {
-        // TODO
-        return DLinkedList<T>();
+        xMap<T, bool> visited(hashFunc);
+        DLinkedList<T> topoSortedList;
+        xMap<T, bool> recursionStack(hashFunc);
+        for(auto vertexIt = graph->begin(); vertexIt != graph->end(); ++vertexIt) {
+            T vertex = *vertexIt;
+            if(!visited.containsKey(vertex)) {
+                if(!dfsVisit(vertex, visited, recursionStack, topoSortedList)) {
+                    return DLinkedList<T>();
+                }
+            }
+        }
+        DLinkedList<T> reversedList;
+        for(auto it = topoSortedList.bbegin(); it != topoSortedList.bend(); ++it) {
+            reversedList.add(*it);
+        }
+        return reversedList;
     }
 
 protected:
@@ -131,6 +133,30 @@ protected:
             }
         }
         return zeroInDegreeList;
+    }
+
+    bool dfsVisit(const T &vertex, xMap<T, bool> &visited, xMap<T, bool> &recursionStack,
+                  DLinkedList<T> &topoSortedList) {
+        visited.put(vertex, true);
+        recursionStack.put(vertex, true);
+
+        auto neighbors = graph->getOutwardEdges(vertex);
+
+        for(auto it = neighbors.begin(); it != neighbors.end(); ++it) {
+            T &neighbor = *it;
+
+            if(!visited.containsKey(neighbor)) {
+                if(recursionStack.containsKey(neighbor)) {
+                    return false;
+                }
+                if(!dfsVisit(neighbor, visited, recursionStack, topoSortedList)) {
+                    return false;
+                }
+            }
+        }
+        recursionStack.remove(vertex);
+        topoSortedList.add(vertex);
+        return true;
     }
 
 }; // TopoSorter

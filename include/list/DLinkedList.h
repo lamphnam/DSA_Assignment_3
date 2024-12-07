@@ -315,7 +315,7 @@ DLinkedList<T>::DLinkedList(const DLinkedList<T> &list) {
 
     Node *current = list.head->next;
     while(current != list.tail) {
-        add(current->data); // Hàm add phải sao chép đúng đối tượng
+        add(current->data);
         current = current->next;
     }
 }
