@@ -22,6 +22,7 @@ namespace fs = std::filesystem;
 #include "../demo/graph/DGraphDemo.h"
 #include "../demo/graph/UGraphDemo.h"
 #include "../demo/stacknqueue/QueueDemo.h"
+#include "../demo/stacknqueue/StackDemo.h"
 #include "../include/graph/TopoSorter.h"
 
 int main(int argc, char **argv) {
@@ -37,5 +38,8 @@ int main(int argc, char **argv) {
     //  ugraphDemo2();
     DGraphDemo2();
     DGraphDemo3();
+    // stackDemo1();
+    // stackDemo2();
+    // stackDemo();
     return 0;
 }

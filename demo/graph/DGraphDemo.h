@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   DGraphDemo.h
  * Author: LTSACH
  *
@@ -13,23 +13,25 @@
 
 #ifndef DGRAPHDEMO_H
 #define DGRAPHDEMO_H
+#include "../include/graph/TopoSorter.h"
+#include "graph/DGraphModel.h"
 #include <sstream>
 #include <string>
-#include "graph/DGraphModel.h"
-#include "../include/graph/TopoSorter.h"
 
-bool charComparator(char& lhs, char& rhs){
-    return lhs==rhs;
+bool charComparator(char &lhs, char &rhs) {
+    return lhs == rhs;
 }
-string vertex2str(char& v){
+
+string vertex2str(char &v) {
     stringstream os;
     os << v;
     return os.str();
 }
-void DGraphDemo1(){
+
+void DGraphDemo1() {
     DGraphModel<char> model(&charComparator, &vertex2str);
     char vertices[] = {'A', 'B', 'C', 'D'};
-    for(int idx=0; idx < 4; idx++){
+    for(int idx = 0; idx < 4; idx++) {
         model.add(vertices[idx]);
     }
     model.connect('A', 'B');
@@ -39,10 +41,10 @@ void DGraphDemo1(){
     model.println();
 }
 
-void DGraphDemo2(){
+void DGraphDemo2() {
     DGraphModel<char> model(&charComparator, &vertex2str);
     char vertices[] = {'A', 'B', 'C', 'D'};
-    for(int idx=0; idx < 4; idx++){
+    for(int idx = 0; idx < 4; idx++) {
         model.add(vertices[idx]);
     }
     model.connect('A', 'B');
@@ -50,16 +52,15 @@ void DGraphDemo2(){
     model.connect('C', 'B');
     model.connect('C', 'D');
     model.println();
-    
+
     TopoSorter<char> sorter(&model);
     DLinkedList<char> topo = sorter.sort(TopoSorter<char>::BFS);
     cout << left << setw(15) << "Topo-order: " << topo.toString() << endl;
 }
 
-
-void DGraphDemo3(){
+void DGraphDemo3() {
     DGraphModel<char> model(&charComparator, &vertex2str);
-    for(int idx=0; idx<10; idx++){
+    for(int idx = 0; idx < 10; idx++) {
         model.add((char)('0' + idx));
     }
 
@@ -78,11 +79,11 @@ void DGraphDemo3(){
     model.connect('8', '7');
     model.connect('9', '4');
     model.println();
-    
+
     TopoSorter<char> sorter(&model);
     DLinkedList<char> bfs = sorter.sort(TopoSorter<char>::BFS);
     cout << left << setw(15) << "Topo-order (BFS): " << bfs.toString() << endl;
-    
+
     DLinkedList<char> dfs = sorter.sort(TopoSorter<char>::DFS);
     cout << left << setw(15) << "Topo-order (DFS): " << dfs.toString() << endl;
 }
@@ -108,20 +109,17 @@ void DGraphDemo3(){
 //     model.connect('4', '2', 10);
 //     model.connect('4', '3', 4);
 //     model.println();
- 
 
 //     DGraphAlgorithm<char> finder;
 //     DLinkedList<Path<char>*> list = finder.dijkstra(&model, '0');
 //     cout << "Dijkstra output:" << endl;
 //     for(DLinkedList<Path<char>*>::Iterator it= list.begin(); it != list.end(); it++){
 //         Path<char>* path = *it;
-        
+
 //         cout << left << setw(8) << "path: ";
 //         cout << path->toString() << endl;
 //     }
 //     cout << endl;
 // }
 
-
 #endif /* DGRAPHDEMO_H */
-

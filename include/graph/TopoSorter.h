@@ -90,7 +90,7 @@ public:
             }
         }
         DLinkedList<T> reversedList;
-        for(auto it = topoSortedList.bbegin(); it != topoSortedList.bend(); ++it) {
+        for(auto it = topoSortedList.bbegin(); it != topoSortedList.bend(); --it) {
             reversedList.add(*it);
         }
         return reversedList;

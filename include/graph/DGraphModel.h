@@ -56,6 +56,11 @@ public:
         if(toVertex == nullptr) {
             throw VertexNotFoundException(this->getVertex2Str()(to));
         }
+        typename AbstractGraph<T>::Edge *edge = fromVertex->getEdge(toVertex);
+        if(!edge) {
+            throw EdgeNotFoundException("E(" + this->getVertex2Str()(from) + "," + this->getVertex2Str()(to) + ")");
+        }
+
         fromVertex->removeTo(toVertex);
     }
 
@@ -64,20 +69,27 @@ public:
         if(removeVertex == nullptr) {
             throw VertexNotFoundException(this->getVertex2Str()(vertex));
         }
-        for(auto &vertexNode : this->nodeList) {
-            vertexNode->removeTo(removeVertex);
+
+        typename DLinkedList<typename AbstractGraph<T>::VertexNode *>::Iterator it = this->nodeList.begin();
+        while(it != this->nodeList.end()) {
+            typename AbstractGraph<T>::VertexNode *node = *it;
+            if(node != removeVertex) {
+                node->removeTo(removeVertex);
+            }
+            ++it;
         }
 
         // Remove the vertex itself from the nodeList list
-        int count = 0;
-        for(auto it = this->nodeList.begin(); it != this->nodeList.end();it++) {
-            if(*it == removeVertex) {
-                this->nodeList.removeAt(count);
-                break;
-            } 
-            count++;
+        DLinkedList<T> outEdges = removeVertex->getOutwardEdges();
+        typename DLinkedList<T>::Iterator outIt = outEdges.begin();
+        while(outIt != outEdges.end()) {
+            T toVertex = *outIt;
+            removeVertex->removeTo(this->getVertexNode(toVertex));
+            ++outIt;
         }
 
+        // Remove the vertex
+        this->nodeList.removeItem(removeVertex);
         delete removeVertex;
     }
 
@@ -88,28 +100,11 @@ public:
 
         // Add all nodeList to the graph
         for(int i = 0; i < nnodeList; i++) {
-            graph->addVertex(nodeList[i]);
+            graph->add(nodeList[i]);
         }
 
-        // Add all edges to the graph
         for(int i = 0; i < nedges; i++) {
-            // Find source and destination nodeList
-            typename AbstractGraph<T>::VertexNode *fromVertex = graph->getVertexNode(edges[i].source->data);
-            typename AbstractGraph<T>::VertexNode *toVertex = graph->getVertexNode(edges[i].destination->data);
-
-            // Ensure both nodeList exist
-            if(fromVertex == nullptr) {
-                delete graph;
-                throw VertexNotFoundException(vertex2Str(edges[i].source->data));
-            }
-            if(toVertex == nullptr) {
-                delete graph;
-                throw VertexNotFoundException(vertex2Str(edges[i].destination->data));
-            }
-
-            // Create and add the edge
-            Edge<T> *newEdge = new Edge<T>(fromVertex, toVertex, edges[i].weight);
-            fromVertex->adList.add(newEdge);
+            graph->connect(edges[i].from, edges[i].to, edges[i].weight);
         }
 
         return graph;

@@ -17,6 +17,7 @@
 #include <sstream>
 #include <string>
 using namespace std;
+#include <iomanip>
 
 template <class T>
 class AbstractGraph : public IGraph<T> {
@@ -27,7 +28,8 @@ public:
 
 private:
 protected:
-    // Using the adjacent list technique, so need to store list of nodes (nodeList)
+    // Using the adjacent list technique, so need to store list of nodes
+    // (nodeList)
     DLinkedList<VertexNode *> nodeList;
 
     // Function pointers:
@@ -89,7 +91,15 @@ public:
     /* The following are common methods for UGraphModel and DGraphModel
      */
     virtual void add(T vertex) {
-        // TODO
+        // Kiểm tra xem đỉnh đã tồn tại chưa
+        for(int i = 0; i < nodeList.size(); i++) {
+            if(vertexEQ(nodeList.get(i)->vertex, vertex)) {
+                // Nếu đỉnh đã tồn tại thì không thêm nữa
+                return;
+            }
+        }
+
+        // Nếu chưa tồn tại thì mới tạo node mới và thêm vào
         VertexNode *newNode = new VertexNode(vertex, this->vertexEQ, this->vertex2str);
         nodeList.add(newNode);
     }
@@ -110,7 +120,8 @@ public:
             throw VertexNotFoundException(this->getVertex2Str()(to));
         }
         Edge *edge = fromNode->getEdge(toNode);
-        if(!edge) throw EdgeNotFoundException(this->edge2Str(*edge));
+        if(!edge)
+            throw EdgeNotFoundException("E(" + this->getVertex2Str()(from) + "," + this->getVertex2Str()(to) + ")");
         return edge->weight;
     }
 
@@ -129,7 +140,6 @@ public:
         if(toNode == nullptr) throw VertexNotFoundException(this->getVertex2Str()(to));
 
         DLinkedList<T> inwardVertices;
-
         for(auto nodeIt = nodeList.begin(); nodeIt != nodeList.end(); ++nodeIt) {
             VertexNode *node = *nodeIt;
             for(auto edgeIt = node->adList.begin(); edgeIt != node->adList.end(); ++edgeIt) {
@@ -139,7 +149,6 @@ public:
                 }
             }
         }
-
         return inwardVertices;
     }
 
@@ -187,9 +196,7 @@ public:
 
         VertexNode *vertexNode = getVertexNode(vertex);
 
-        // if (vertexNode == nullptr) {
-        //     throw VertexNotFoundException();
-        // }
+        if(vertexNode == nullptr) throw VertexNotFoundException(this->getVertex2Str()(vertex));
 
         return vertexNode->adList.size();
     }
@@ -353,17 +360,15 @@ public:
         }
 
         void removeTo(VertexNode *to) {
-            // TODO
-            int count = 0;
-            for(auto it = adList.begin(); it != adList.end(); it++) {
-                Edge *edge = *it;
+            for(auto it = adList.begin(); it != adList.end(); ++it) {
+                Edge *edge = *it; // Get the edge at the current iterator position.
                 if(edge->to == to) {
-                    adList.removeAt(count);
+                    // Now use removeItem to remove the edge from the adjacency list.
+                    adList.removeItem(edge, nullptr);
                     this->outDegree_--;
-                    this->inDegree_--;
+                    to->inDegree_--;
                     break;
                 }
-                count++;
             }
         }
 
